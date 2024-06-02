@@ -3,7 +3,7 @@ package emoji_test
 import (
 	"fmt"
 
-	emoji "github.com/Andrew-M-C/go.emoji"
+	emoji "github.com/bincooo/go.emoji"
 )
 
 func ExampleReplaceAllEmojiFunc() {
@@ -12,7 +12,7 @@ func ExampleReplaceAllEmojiFunc() {
 	s := "👩‍👩‍👦🇨🇳"
 	i := 0
 
-	final := emoji.ReplaceAllEmojiFunc(s, func(emoji string) string {
+	final := emoji.ReplaceEmoji(s, func(_ int, emoji string) string {
 		i++
 		printf("%02d - %s - len %d\n", i, emoji, len(emoji))
 		return fmt.Sprintf("%d-", i)

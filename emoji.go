@@ -7,11 +7,31 @@ package emoji
 import (
 	"bytes"
 
-	"github.com/Andrew-M-C/go.emoji/internal/official"
+	"github.com/bincooo/go.emoji/internal/official"
 )
 
+func HasEmoji(s string) bool {
+	for i := range s {
+		match, _ := official.AllSequences.HasEmojiPrefix(s[i:])
+		if match {
+			return true
+		}
+	}
+	return false
+}
+
+func FilterEmoji(s string) string {
+	return replaceAllEmojiFunc(s, func(_ int, emoji string) string {
+		return ""
+	})
+}
+
+func ReplaceEmoji(s string, f func(index int, emoji string) string) string {
+	return replaceAllEmojiFunc(s, f)
+}
+
 // ReplaceAllEmojiFunc searches string and find all emojis.
-func ReplaceAllEmojiFunc(s string, f func(emoji string) string) string {
+func replaceAllEmojiFunc(s string, f func(index int, emoji string) string) string {
 	buff := bytes.Buffer{}
 	nextIndex := 0
 
@@ -28,7 +48,7 @@ func ReplaceAllEmojiFunc(s string, f func(emoji string) string) string {
 
 		nextIndex = i + length
 		if f != nil {
-			buff.WriteString(f(s[i : i+length]))
+			buff.WriteString(f(i, s[i:i+length]))
 		}
 	}
 

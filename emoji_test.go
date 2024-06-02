@@ -18,7 +18,7 @@ var (
 
 func TestEmoji(t *testing.T) {
 	cv("visualize unicode", t, func() { testUnicode((t)) })
-	cv("ReplaceAllEmojiFunc()", t, func() { testReplaceAllEmojiFunc(t) })
+	cv("ReplaceAllEmojiFunc()", t, func() { TestReplaceAllEmojiFunc(t) })
 	cv("IterateChars()", t, func() { testIterateChars(t) })
 	cv("#3", t, func() { testIssue3(t) })
 }
@@ -100,15 +100,16 @@ func testUnicode(t *testing.T) {
 	buff.Reset()
 }
 
-func testReplaceAllEmojiFunc(t *testing.T) {
+func TestReplaceAllEmojiFunc(t *testing.T) {
 	printf := t.Logf
 
 	s := "👩‍👩‍👦🇨🇳"
 	i := 0
 
-	final := ReplaceAllEmojiFunc(s, func(emoji string) string {
+	printf("%s, %d", s, len(s))
+	final := replaceAllEmojiFunc(s, func(index int, emoji string) string {
 		i++
-		printf("%02d - %s - len %d", i, emoji, len(emoji))
+		printf("%02d - %s - len %d - index - %d", i, emoji, len(emoji), index)
 		return fmt.Sprintf("%d-", i)
 	})
 
@@ -155,7 +156,7 @@ func testIssue3(t *testing.T) {
 	str := string([]rune{0x2764, '|', 0x2764, 0xFE0F})
 	cnt := 0
 
-	final := ReplaceAllEmojiFunc(str, func(emoji string) string {
+	final := replaceAllEmojiFunc(str, func(i int, emoji string) string {
 		cnt++
 		return "heart"
 	})
